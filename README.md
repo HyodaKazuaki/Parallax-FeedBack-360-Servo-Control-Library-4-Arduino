@@ -11,7 +11,7 @@ This library facilitates control of [Parallax FeedBack 360° High Speed Servo](h
 Please see [`SUPPORTED.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/SUPPORTED.md).
 
 ## How to Install
-Download this library on [Release page](https://github.com/HyodaKazuaki/) and Install zip file on Arduino IDE.
+Download this library on [Release page](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/releases) and Install zip file on Arduino IDE.
 
 ## Example
 This library is contains some examples.

@@ -11,7 +11,7 @@ English README is [`README.md`](https://github.com/HyodaKazuaki/Parallax-FeedBac
 [`SUPPORTED.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/SUPPORTED.md)をご覧ください。
 
 ## インストール方法
-[Release](https://github.com/HyodaKazuaki/)よりzipファイルをダウンロードし、Arduino IDEのメニューにある`スケッチ`→`ライブラリをインクルード`→`.zip形式のライブラリをインストール`を選択してダウンロードしたzipファイルをインストールします。
+[Release](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/releases)よりzipファイルをダウンロードし、Arduino IDEのメニューにある`スケッチ`→`ライブラリをインクルード`→`.zip形式のライブラリをインストール`を選択してダウンロードしたzipファイルをインストールします。
 
 ## サンプル
 このライブラリにはいくつかのサンプルが含まれており、`ファイル`→`スケッチ例`より確認することができます。
