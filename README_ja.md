@@ -5,10 +5,10 @@ Parallax FeedBack 360 Servo Control Library 4 Arduino
 
 このライブラリは[Parallax FeedBack 360° High Speed Servo](https://www.parallax.com/product/900-00360)の制御を容易にします。このサーボモーターはPWM信号によるフィードバックが行われます。このライブラリを使用して、サーボの回転角度を制御できる他、サーボの回転角度を読み取ることができます。
 
-English README is `README.md`.
+English README is [`README.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/README.md).
 
 ## サポート
-`SUPPORTED.md`をご覧ください。
+[`SUPPORTED.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/SUPPORTED.md)をご覧ください。
 
 ## インストール方法
 [Release](https://github.com/HyodaKazuaki/)よりzipファイルをダウンロードし、Arduino IDEのメニューにある`スケッチ`→`ライブラリをインクルード`→`.zip形式のライブラリをインストール`を選択してダウンロードしたzipファイルをインストールします。
@@ -57,4 +57,4 @@ void loop() {
 
 ## ライセンス
 このライブラリはMITライセンスに基づいて配布させています。
-詳しくは`LICENSE`をご覧ください。
+詳しくは[`LICENSE`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/LICENSE)をご覧ください。
