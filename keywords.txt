@@ -1,0 +1,15 @@
+#######################################
+# Syntax Coloring Map
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+FeedBackServo   KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+setServoControl KEYWORD2
+rotate  KEYWORD2
+Angle   KEYWORD2
