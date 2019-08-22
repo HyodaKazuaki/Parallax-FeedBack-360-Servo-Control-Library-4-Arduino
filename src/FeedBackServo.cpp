@@ -35,7 +35,7 @@ void FeedBackServo::setServoControl(byte servoPinNumber = 3)
     Parallax.attach(servoPinNumber);
 }
 
-void setKp(float _Kp = 1.0) {
+void FeedBackServo::setKp(float _Kp = 1.0) {
     FeedBackServo::Kp = _Kp;
 }
 
