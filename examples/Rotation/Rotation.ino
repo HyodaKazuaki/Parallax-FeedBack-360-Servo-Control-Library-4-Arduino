@@ -12,6 +12,9 @@ void setup() {
 }
 
 void loop() {
-    // rotate servo to 300 degrees(with contains +-4 degrees error)
-    servo.rotate(300, 4);
+    // rotate servo to 270 and -180 degrees(with contains +-1 degrees error) each 1 second.
+    servo.rotate(270, 4);
+    delay(1000);
+    servo.rotate(-180, 4);
+    delay(1000);
 }

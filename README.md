@@ -1,14 +1,16 @@
 Parallax FeedBack 360 Servo Control Library 4 Arduino
 =====
 
-**Alpha version(Not tested)**
-
 This library facilitates control of [Parallax FeedBack 360° High Speed Servo](https://www.parallax.com/product/900-00360). This servo motor provides feedback via the PWM signal. You can control servo to degree of rotation what you want with this library. Of course, you can read servo's degree of rotation.
 
 日本語のREADMEは[`README_ja.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/README_ja.md)をご覧ください。
 
 ## Support
 Please see [`SUPPORTED.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/SUPPORTED.md).
+
+## Pin Assign
+Assign the feedback signal line of the servomotor to the feedback signal pin that allows external interruption.
+Assign the control pin to which the servo motor control line is assigned.
 
 ## How to Install
 Download this library on [Release page](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/releases) and Install zip file on Arduino IDE.
@@ -31,8 +33,11 @@ void setup() {
 }
 
 void loop() {
-    // rotate servo to 300 degrees(with contains +-4 degrees error)
-    servo.rotate(300, 4);
+    // rotate servo to 270 and -180 degrees(with contains +-4 degrees error) each 1 second.
+    servo.rotate(270, 4);
+    delay(1000);
+    servo.rotate(-180, 4);
+    delay(1000);
 }
 ```
 ### Read

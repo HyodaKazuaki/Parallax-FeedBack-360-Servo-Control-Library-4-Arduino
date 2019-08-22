@@ -3,7 +3,7 @@
 #define FEEDBACK_PIN 2
 
 // set feedback signal pin number
-FeedBackServo Servo = FeedBackServo(FEEDBACK_PIN);
+FeedBackServo servo = FeedBackServo(FEEDBACK_PIN);
 
 void setup() {
     // serial communication start with 115200 bps

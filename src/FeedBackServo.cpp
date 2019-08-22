@@ -8,20 +8,14 @@
 #include <Servo.h>
 #include "FeedBackServo.h"
 
-const int Kp = 1;
-const int unitsFC = 360;
-const float dcMin = 0.029;
-const float dcMax = 0.971;
-const int dutyScale = 1;
-const int q2min = unitsFC / 4;
-const int q3max = q2min * 3;
-
-byte feedbackPinNumber = 2;
-volatile int angle;
-float thetaPre;
-unsigned int tHigh, tLow;
-unsigned long rise, fall;
-int turns = 0;
+static Servo FeedBackServo::Parallax;
+static byte FeedBackServo::feedbackPinNumber = 2;
+static volatile int FeedBackServo::angle;
+static float FeedBackServo::thetaPre;
+static unsigned int FeedBackServo::tHigh, FeedBackServo::tLow;
+static unsigned long FeedBackServo::rise, FeedBackServo::fall;
+static int FeedBackServo::turns = 0;
+static float FeedBackServo::Kp = 1.0;
 
 FeedBackServo::FeedBackServo(byte _feedbackPinNumber = 2)
 {
@@ -41,25 +35,30 @@ void FeedBackServo::setServoControl(byte servoPinNumber = 3)
     Parallax.attach(servoPinNumber);
 }
 
+void setKp(float _Kp = 1.0) {
+    FeedBackServo::Kp = _Kp;
+}
+
 void FeedBackServo::rotate(int degree, int threshold = 4)
 {
-    int output, offset, value;
-    for(int errorAngle = degree - angle; abs(errorAngle) > threshold;) {
+    float output, offset, value;
+    for(int errorAngle = degree - angle; abs(errorAngle) > threshold; errorAngle = degree - angle) {
         output = errorAngle * Kp;
-        if(output > 200)
-            output = 200;
-        if(output < -200)
-            output = -200;
+        if(output > 200.0)
+            output = 200.0;
+        if(output < -200.0)
+            output = -200.0;
         if(errorAngle > 0)
-            offset = 30;
+            offset = 30.0;
         else if(errorAngle < 0)
-            offset = -30;
+            offset = -30.0;
         else
-            offset = 0;
+            offset = 0.0;
         
         value = output + offset;
         Parallax.writeMicroseconds(1490 - value);
     }
+    Parallax.writeMicroseconds(1490);
 }
 
 int FeedBackServo::Angle()
@@ -123,7 +122,7 @@ byte FeedBackServo::convertFeedbackPin()
     return internalPinNumber;
 }
 
-static void feedback() {
+static void FeedBackServo::feedback() {
     if(digitalRead(feedbackPinNumber)) {
         rise = micros();
         tLow = rise - fall;
