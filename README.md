@@ -30,6 +30,8 @@ FeedBackServo servo = FeedBackServo(FEEDBACK_PIN);
 void setup() {
     // set servo control pin number
     servo.setServoControl(SERVO_PIN);
+    // set Kp to proportional controller
+    servo.setKp(1.0);
 }
 
 void loop() {

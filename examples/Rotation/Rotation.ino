@@ -9,6 +9,7 @@ FeedBackServo servo = FeedBackServo(FEEDBACK_PIN);
 void setup() {
     // set servo control pin number
     servo.setServoControl(SERVO_PIN);
+    servo.setKp(1.0);
 }
 
 void loop() {

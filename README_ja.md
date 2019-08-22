@@ -30,6 +30,8 @@ FeedBackServo servo = FeedBackServo(FEEDBACK_PIN);
 void setup() {
     // サーボモータ制御ピンをセット
     servo.setServoControl(SERVO_PIN);
+    // P制御用のKp値をセット
+    servo.setKp(1.0);
 }
 
 void loop() {
