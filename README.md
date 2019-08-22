@@ -17,7 +17,7 @@ Download this library on [Release page](https://github.com/HyodaKazuaki/Parallax
 
 ## Example
 This library is contains some examples.
-### Rotate
+### Rotation
 ```arduino
 #include "FeedBackServo.h"
 // define feedback signal pin and servo control pin
