@@ -18,7 +18,7 @@ Download this library on [Release page](https://github.com/HyodaKazuaki/Parallax
 ## Example
 This library is contains some examples.
 ### Rotation
-```arduino
+```cpp
 #include "FeedBackServo.h"
 // define feedback signal pin and servo control pin
 #define FEEDBACK_PIN 2
@@ -43,7 +43,7 @@ void loop() {
 }
 ```
 ### Read
-```arduino
+```cpp
 #include "FeedBackServo.h"
 // define feedback signal pin
 #define FEEDBACK_PIN 2
