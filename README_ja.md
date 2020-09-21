@@ -18,7 +18,7 @@ English README is [`README.md`](https://github.com/HyodaKazuaki/Parallax-FeedBac
 ## サンプル
 このライブラリにはいくつかのサンプルが含まれており、`ファイル`→`スケッチ例`より確認することができます。
 ### Rotation
-```arduino
+```cpp
 #include "FeedBackServo.h"
 // フィードバック信号ピンとサーボモータ制御ピンを定義
 #define FEEDBACK_PIN 2
@@ -43,7 +43,7 @@ void loop() {
 
 ```
 ### Read
-```arduino
+```cpp
 #include "FeedBackServo.h"
 // フィードバック信号ピンを定義
 #define FEEDBACK_PIN 2
