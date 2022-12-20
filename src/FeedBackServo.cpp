@@ -23,8 +23,8 @@ FeedBackServo::FeedBackServo(byte _feedbackPinNumber = 2)
     pinCheck(_feedbackPinNumber);
     feedbackPinNumber = _feedbackPinNumber;
 
-    // convert feedback pin number for use on attachInterrupt function
-    byte internalPinNumber = convertFeedbackPin();
+    // convert feedback pin number to interrupt number for use on attachInterrupt function
+    uint8_t internalPinNumber = digitalPinToInterrupt(feedbackPinNumber);
 
     attachInterrupt(internalPinNumber, feedback, CHANGE);
 }
@@ -77,49 +77,6 @@ void FeedBackServo::pinCheck(byte _feedbackPinNumber)
     if(_feedbackPinNumber != 0 && _feedbackPinNumber != 1 && _feedbackPinNumber != 2 && _feedbackPinNumber != 3 && _feedbackPinNumber != 7)
         exit(1);
     #endif
-}
-
-byte FeedBackServo::convertFeedbackPin()
-{
-    byte internalPinNumber;
-    #ifdef ARDUINO_AVR_UNO
-    switch (feedbackPinNumber)
-    {
-    case 2:
-        internalPinNumber = 0;
-        break;
-    case 3:
-        internalPinNumber = 1;
-        break;
-    default:
-        internalPinNumber = 0;
-        break;
-    }
-    #endif
-    #ifdef ARDUINO_AVR_LEONARDO
-    switch (feedbackPinNumber)
-    {
-    case 0:
-        internalPinNumber = 2;
-        break;
-    case 1:
-        internalPinNumber = 3;
-        break;
-    case 2:
-        internalPinNumber = 1;
-        break;
-    case 3:
-        internalPinNumber = 0;
-        break;
-    case 7:
-        internalPinNumber = 4;
-        break;
-    default:
-        internalPinNumber = 0;
-        break;
-    }
-    #endif
-    return internalPinNumber;
 }
 
 static void FeedBackServo::feedback() {
