@@ -17,29 +17,29 @@ static unsigned long FeedBackServo::rise, FeedBackServo::fall;
 static int FeedBackServo::turns = 0;
 static float FeedBackServo::Kp = 1.0;
 
-FeedBackServo::FeedBackServo(byte _feedbackPinNumber = 2)
+FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
 {
     // feedback pin number validation
     pinCheck(_feedbackPinNumber);
     feedbackPinNumber = _feedbackPinNumber;
 
     // convert feedback pin number to interrupt number for use on attachInterrupt function
-    uint8_t internalPinNumber = digitalPinToInterrupt(feedbackPinNumber);
+    byte internalPinNumber = digitalPinToInterrupt(feedbackPinNumber);
 
     attachInterrupt(internalPinNumber, feedback, CHANGE);
 }
 
-void FeedBackServo::setServoControl(byte servoPinNumber = 3)
+void FeedBackServo::setServoControl(byte servoPinNumber)
 {
     // Servo control pin attach
     Parallax.attach(servoPinNumber);
 }
 
-void FeedBackServo::setKp(float _Kp = 1.0) {
+void FeedBackServo::setKp(float _Kp) {
     FeedBackServo::Kp = _Kp;
 }
 
-void FeedBackServo::rotate(int degree, int threshold = 4)
+void FeedBackServo::rotate(int degree, int threshold)
 {
     float output, offset, value;
     for(int errorAngle = degree - angle; abs(errorAngle) > threshold; errorAngle = degree - angle) {
@@ -79,7 +79,7 @@ void FeedBackServo::pinCheck(byte _feedbackPinNumber)
     #endif
 }
 
-static void FeedBackServo::feedback() {
+void FeedBackServo::feedback() {
     if(digitalRead(feedbackPinNumber)) {
         rise = micros();
         tLow = rise - fall;

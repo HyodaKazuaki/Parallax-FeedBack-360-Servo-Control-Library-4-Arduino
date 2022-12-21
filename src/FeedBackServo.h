@@ -13,7 +13,6 @@ class FeedBackServo {
     
     private:
         void pinCheck(byte pinNumber);
-        byte convertFeedbackPin();
         void static feedback();
         static Servo Parallax;
         static byte feedbackPinNumber;
@@ -29,6 +28,8 @@ class FeedBackServo {
         static const int dutyScale = 1;
         static const int q2min = unitsFC / 4;
         static const int q3max = q2min * 3;
+        static const int degree = 0;
+        static const int threshold = 4;
 };
 
 #endif
