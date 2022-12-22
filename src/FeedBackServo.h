@@ -23,14 +23,12 @@ private:
     static unsigned long rise, fall;
     static int turns;
     static float Kp;
-    static const int unitsFC = 360;
-    static const float dcMin = 0.029;
-    static const float dcMax = 0.971;
-    static const int dutyScale = 1;
-    static const int q2min = unitsFC / 4;
-    static const int q3max = q2min * 3;
-    static const int degree = 0;
-    static const int threshold = 4;
+    static const int unitsFC;
+    static const float dcMin;
+    static const float dcMax;
+    static const int dutyScale;
+    static const int q2min;
+    static const int q3max;
 };
 
 #endif

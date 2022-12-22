@@ -8,14 +8,20 @@
 #include <Servo.h>
 #include "FeedBackServo.h"
 
-static Servo FeedBackServo::Parallax;
-static byte FeedBackServo::feedbackPinNumber = 2;
-static volatile int FeedBackServo::angle;
-static float FeedBackServo::thetaPre;
-static unsigned int FeedBackServo::tHigh, FeedBackServo::tLow;
-static unsigned long FeedBackServo::rise, FeedBackServo::fall;
-static int FeedBackServo::turns = 0;
-static float FeedBackServo::Kp = 1.0;
+Servo FeedBackServo::Parallax;
+byte FeedBackServo::feedbackPinNumber = 2;
+volatile int FeedBackServo::angle;
+float FeedBackServo::thetaPre;
+unsigned int FeedBackServo::tHigh, FeedBackServo::tLow;
+unsigned long FeedBackServo::rise, FeedBackServo::fall;
+int FeedBackServo::turns = 0;
+float FeedBackServo::Kp = 1.0;
+const int FeedBackServo::unitsFC = 360;
+const float FeedBackServo::dcMin = 0.029;
+const float FeedBackServo::dcMax = 0.971;
+const int FeedBackServo::dutyScale = 1;
+const int FeedBackServo::q2min = unitsFC / 4;
+const int FeedBackServo::q3max = q2min * 3;
 
 FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
 {
