@@ -33,4 +33,4 @@ If you have successfully used this library with an unconfirmed board, please let
 | Arduino Industrial 101 | △ |
 | Linino One | △ |
 | Arduino Uno WiFi | △ |
-| Arduino Due | ╳ |
+| Arduino Due | △ |

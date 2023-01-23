@@ -8,53 +8,63 @@
 #include <Servo.h>
 #include "FeedBackServo.h"
 
-static Servo FeedBackServo::Parallax;
-static byte FeedBackServo::feedbackPinNumber = 2;
-static volatile int FeedBackServo::angle;
-static float FeedBackServo::thetaPre;
-static unsigned int FeedBackServo::tHigh, FeedBackServo::tLow;
-static unsigned long FeedBackServo::rise, FeedBackServo::fall;
-static int FeedBackServo::turns = 0;
-static float FeedBackServo::Kp = 1.0;
+Servo FeedBackServo::Parallax;
+byte FeedBackServo::feedbackPinNumber = 2;
+volatile int FeedBackServo::angle;
+float FeedBackServo::thetaPre;
+unsigned int FeedBackServo::tHigh, FeedBackServo::tLow;
+unsigned long FeedBackServo::rise, FeedBackServo::fall;
+int FeedBackServo::turns = 0;
+float FeedBackServo::Kp = 1.0;
+const int FeedBackServo::unitsFC = 360;
+const float FeedBackServo::dcMin = 0.029;
+const float FeedBackServo::dcMax = 0.971;
+const int FeedBackServo::dutyScale = 1;
+const int FeedBackServo::q2min = unitsFC / 4;
+const int FeedBackServo::q3max = q2min * 3;
 
-FeedBackServo::FeedBackServo(byte _feedbackPinNumber = 2)
+FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
 {
     // feedback pin number validation
     pinCheck(_feedbackPinNumber);
     feedbackPinNumber = _feedbackPinNumber;
 
-    // convert feedback pin number for use on attachInterrupt function
-    byte internalPinNumber = convertFeedbackPin();
+    // convert feedback pin number to interrupt number for use on attachInterrupt function
+    byte internalPinNumber = digitalPinToInterrupt(feedbackPinNumber);
 
     attachInterrupt(internalPinNumber, feedback, CHANGE);
 }
 
-void FeedBackServo::setServoControl(byte servoPinNumber = 3)
+void FeedBackServo::setServoControl(byte servoPinNumber)
 {
     // Servo control pin attach
     Parallax.attach(servoPinNumber);
 }
 
-void FeedBackServo::setKp(float _Kp = 1.0) {
+void FeedBackServo::setKp(float _Kp)
+{
     FeedBackServo::Kp = _Kp;
 }
 
-void FeedBackServo::rotate(int degree, int threshold = 4)
+void FeedBackServo::rotate(int degree, int threshold)
 {
     float output, offset, value;
-    for(int errorAngle = degree - angle; abs(errorAngle) > threshold; errorAngle = degree - angle) {
+    for (int errorAngle = degree - angle;
+         abs(errorAngle) > threshold;
+         errorAngle = degree - angle)
+    {
         output = errorAngle * Kp;
-        if(output > 200.0)
+        if (output > 200.0)
             output = 200.0;
-        if(output < -200.0)
+        if (output < -200.0)
             output = -200.0;
-        if(errorAngle > 0)
+        if (errorAngle > 0)
             offset = 30.0;
-        else if(errorAngle < 0)
+        else if (errorAngle < 0)
             offset = -30.0;
         else
             offset = 0.0;
-        
+
         value = output + offset;
         Parallax.writeMicroseconds(1490 - value);
     }
@@ -68,89 +78,55 @@ int FeedBackServo::Angle()
 
 void FeedBackServo::pinCheck(byte _feedbackPinNumber)
 {
-    // Check pin number
-    #ifdef ARDUINO_AVR_UNO
-    if(_feedbackPinNumber != 2 && _feedbackPinNumber != 3)
+// Check pin number
+#ifdef ARDUINO_AVR_UNO
+    if (_feedbackPinNumber != 2 &&
+        _feedbackPinNumber != 3)
         exit(1);
-    #endif
-    #ifdef ARDUINO_AVR_LEONARDO
-    if(_feedbackPinNumber != 0 && _feedbackPinNumber != 1 && _feedbackPinNumber != 2 && _feedbackPinNumber != 3 && _feedbackPinNumber != 7)
+#endif
+#ifdef ARDUINO_AVR_LEONARDO
+    if (_feedbackPinNumber != 0 &&
+        _feedbackPinNumber != 1 &&
+        _feedbackPinNumber != 2 &&
+        _feedbackPinNumber != 3 &&
+        _feedbackPinNumber != 7)
         exit(1);
-    #endif
+#endif
 }
 
-byte FeedBackServo::convertFeedbackPin()
+void FeedBackServo::feedback()
 {
-    byte internalPinNumber;
-    #ifdef ARDUINO_AVR_UNO
-    switch (feedbackPinNumber)
+    if (digitalRead(feedbackPinNumber))
     {
-    case 2:
-        internalPinNumber = 0;
-        break;
-    case 3:
-        internalPinNumber = 1;
-        break;
-    default:
-        internalPinNumber = 0;
-        break;
-    }
-    #endif
-    #ifdef ARDUINO_AVR_LEONARDO
-    switch (feedbackPinNumber)
-    {
-    case 0:
-        internalPinNumber = 2;
-        break;
-    case 1:
-        internalPinNumber = 3;
-        break;
-    case 2:
-        internalPinNumber = 1;
-        break;
-    case 3:
-        internalPinNumber = 0;
-        break;
-    case 7:
-        internalPinNumber = 4;
-        break;
-    default:
-        internalPinNumber = 0;
-        break;
-    }
-    #endif
-    return internalPinNumber;
-}
-
-static void FeedBackServo::feedback() {
-    if(digitalRead(feedbackPinNumber)) {
         rise = micros();
         tLow = rise - fall;
 
         int tCycle = tHigh + tLow;
-        if((tCycle < 1000) || (tCycle > 1200))
+        if ((tCycle < 1000) || (tCycle > 1200))
             return;
-        
+
         float dc = (dutyScale * tHigh) / (float)tCycle;
         float theta = ((dc - dcMin) * unitsFC) / (dcMax - dcMin);
 
-        if(theta < 0.0)
+        if (theta < 0.0)
             theta = 0.0;
-        else if(theta > (unitsFC - 1.0))
+        else if (theta > (unitsFC - 1.0))
             theta = unitsFC - 1.0;
 
-        if((theta < q2min) && (thetaPre > q3max))
+        if ((theta < q2min) && (thetaPre > q3max))
             turns++;
-        else if((thetaPre < q2min) && (theta > q3max))
+        else if ((thetaPre < q2min) && (theta > q3max))
             turns--;
 
-        if(turns >= 0)
+        if (turns >= 0)
             angle = (turns * unitsFC) + theta;
-        else if(turns < 0)
+        else if (turns < 0)
             angle = ((turns + 1) * unitsFC) - (unitsFC - theta);
 
         thetaPre = theta;
-    } else {
+    }
+    else
+    {
         fall = micros();
         tHigh = fall - rise;
     }
