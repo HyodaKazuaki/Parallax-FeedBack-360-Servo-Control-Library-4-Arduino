@@ -12,7 +12,6 @@ public:
     void setKp(float _Kp = 1.0);
     void SetActive(bool isActive);
     void SetTarget(int target);
-    void rotate(int degree, int threshold = 4);
     void Update(int threshold = 4);
     int Angle();
 

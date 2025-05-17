@@ -69,32 +69,6 @@ void FeedBackServo::SetTarget(int target)
     targetAngle_ = target;
 }
 
-void FeedBackServo::rotate(int degree, int threshold)
-{
-    float output, offset, value;
-    for (int errorAngle = degree - angle;
-         abs(errorAngle) > threshold;
-         errorAngle = degree - angle)
-    {
-        output = errorAngle * Kp;
-        if (output > 200.0)
-            output = 200.0;
-        if (output < -200.0)
-            output = -200.0;
-        if (errorAngle > 0)
-            offset = 30.0;
-        else if (errorAngle < 0)
-            offset = -30.0;
-        else
-            offset = 0.0;
-
-        value = output + offset;
-        Parallax.writeMicroseconds(1490 - value);
-    }
-    Parallax.writeMicroseconds(1490);
-}
-
-
 void FeedBackServo::Update(int threshold = 4)
 {
     if (isActive_ == false) return;
