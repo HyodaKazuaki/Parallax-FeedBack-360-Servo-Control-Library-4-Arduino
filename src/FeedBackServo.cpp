@@ -18,7 +18,7 @@ FeedBackServo* FeedBackServo::instances[6] = { nullptr };
 FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
 {
     // feedback pin number validation
-    pinCheck(_feedbackPinNumber);
+    CheckPin(_feedbackPinNumber);
     feedbackPinNumber = _feedbackPinNumber;
 
     // convert feedback pin number to interrupt number for use on attachInterrupt function
@@ -38,15 +38,15 @@ FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
     }
 }
 
-void FeedBackServo::setServoControl(byte servoPinNumber)
+void FeedBackServo::SetServoControl(byte servoPinNumber)
 {
     // Servo control pin attach
     Parallax.attach(servoPinNumber);
 }
 
-void FeedBackServo::setKp(float _Kp)
+void FeedBackServo::SetKp(float Kp)
 {
-    FeedBackServo::Kp = _Kp;
+    FeedBackServo::Kp_ = Kp;
 }
 
 void FeedBackServo::SetActive(bool isActive)
@@ -82,7 +82,7 @@ int FeedBackServo::Angle()
     return angle;
 }
 
-void FeedBackServo::pinCheck(byte _feedbackPinNumber)
+void FeedBackServo::CheckPin(byte _feedbackPinNumber)
 {
 // Check pin number
 #ifdef ARDUINO_AVR_UNO

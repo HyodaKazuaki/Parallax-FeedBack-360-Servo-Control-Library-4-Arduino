@@ -8,29 +8,29 @@ class FeedBackServo
 {
 public:
     FeedBackServo(byte feedbackPinNumber);
-    void setServoControl(byte servoPinNumber = 3);
-    void setKp(float _Kp = 1.0);
+    void SetServoControl(byte servoPinNumber = 3);
+    void SetKp(float Kp = 1.0);
     void SetActive(bool isActive);
     void SetTarget(int target);
     void Update(int threshold = 4);
     int Angle();
 
 private:
-    void pinCheck(byte pinNumber);
+    void CheckPin(byte pinNumber);
     void HandleFeedback();
     Servo Parallax;
     byte feedbackPinNumber;
     byte interruptNumber;
 
-    int targetAngle_;
+    float Kp_ = 1.0;
     bool isActive_ = true;
+    int targetAngle_;
 
     volatile int angle = 0;
     float thetaPre = 0;
     unsigned int tHigh = 0, tLow = 0;
     unsigned long rise = 0, fall = 0;
     int turns = 0;
-    float Kp = 1.0;
 
     static const int unitsFC = 360;
     static const float dcMin;
