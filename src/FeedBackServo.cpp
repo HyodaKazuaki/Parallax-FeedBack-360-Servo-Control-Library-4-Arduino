@@ -66,7 +66,7 @@ void FeedBackServo::Update(int threshold = 4)
     int errorAngle = targetAngle_ - angle_;
     if (abs(errorAngle) <= threshold)
     {
-        servo.writeMicroseconds(1490);
+        Parallax.writeMicroseconds(1490);
         return;
     }
 
@@ -74,12 +74,12 @@ void FeedBackServo::Update(int threshold = 4)
     float offset = (errorAngle > 0) ? 30.0 : -30.0;
     float value = output + offset;
 
-    servo.writeMicroseconds(1490 - value);
+    Parallax.writeMicroseconds(1490 - value);
 }
 
 int FeedBackServo::Angle()
 {
-    return angle;
+    return angle_;
 }
 
 void FeedBackServo::CheckPin(byte _feedbackPinNumber)
@@ -125,9 +125,9 @@ void FeedBackServo::HandleFeedback()
             turns--;
 
         if (turns >= 0)
-            angle = (turns * unitsFC) + theta;
+            angle_ = (turns * unitsFC) + theta;
         else if (turns < 0)
-            angle = ((turns + 1) * unitsFC) - (unitsFC - theta);
+            angle_ = ((turns + 1) * unitsFC) - (unitsFC - theta);
 
         thetaPre = theta;
     }

@@ -26,7 +26,7 @@ private:
     bool isActive_ = true;
     int targetAngle_;
 
-    volatile int angle = 0;
+    volatile int angle_ = 0;
     float thetaPre = 0;
     unsigned int tHigh = 0, tLow = 0;
     unsigned long rise = 0, fall = 0;
