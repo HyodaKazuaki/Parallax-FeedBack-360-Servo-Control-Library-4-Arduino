@@ -23,6 +23,8 @@ const int FeedBackServo::dutyScale = 1;
 const int FeedBackServo::q2min = unitsFC / 4;
 const int FeedBackServo::q3max = q2min * 3;
 
+FeedBackServo* FeedBackServo::instances[6] = { nullptr };
+
 FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
 {
     // feedback pin number validation
@@ -30,9 +32,20 @@ FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
     feedbackPinNumber = _feedbackPinNumber;
 
     // convert feedback pin number to interrupt number for use on attachInterrupt function
-    byte internalPinNumber = digitalPinToInterrupt(feedbackPinNumber);
+    interruptNumber = digitalPinToInterrupt(feedbackPinNumber);
 
-    attachInterrupt(internalPinNumber, feedback, CHANGE);
+    if (interruptNumber < 6) {
+        instances[interruptNumber] = this;
+        switch (interruptNumber)
+        {
+        case 0: attachInterrupt(0, isr0, CHANGE); break;
+        case 1: attachInterrupt(1, isr1, CHANGE); break;
+        case 2: attachInterrupt(2, isr2, CHANGE); break;
+        case 3: attachInterrupt(3, isr3, CHANGE); break;
+        case 4: attachInterrupt(4, isr4, CHANGE); break;
+        case 5: attachInterrupt(5, isr5, CHANGE); break;
+        }
+    }
 }
 
 void FeedBackServo::setServoControl(byte servoPinNumber)
@@ -94,7 +107,7 @@ void FeedBackServo::pinCheck(byte _feedbackPinNumber)
 #endif
 }
 
-void FeedBackServo::feedback()
+void FeedBackServo::HandleFeedback()
 {
     if (digitalRead(feedbackPinNumber))
     {
@@ -131,3 +144,11 @@ void FeedBackServo::feedback()
         tHigh = fall - rise;
     }
 }
+
+// ISR delegates
+void FeedBackServo::isr0() { if (instances[0]) instances[0]->HandleFeedback(); }
+void FeedBackServo::isr1() { if (instances[1]) instances[1]->HandleFeedback(); }
+void FeedBackServo::isr2() { if (instances[2]) instances[2]->HandleFeedback(); }
+void FeedBackServo::isr3() { if (instances[3]) instances[3]->HandleFeedback(); }
+void FeedBackServo::isr4() { if (instances[4]) instances[4]->HandleFeedback(); }
+void FeedBackServo::isr5() { if (instances[5]) instances[5]->HandleFeedback(); }
