@@ -59,6 +59,16 @@ void FeedBackServo::setKp(float _Kp)
     FeedBackServo::Kp = _Kp;
 }
 
+void FeedBackServo::SetActive(bool isActive)
+{
+    isActive_ = isActive;
+}
+
+void FeedBackServo::SetTarget(int target)
+{
+    targetAngle_ = target;
+}
+
 void FeedBackServo::rotate(int degree, int threshold)
 {
     float output, offset, value;
@@ -82,6 +92,25 @@ void FeedBackServo::rotate(int degree, int threshold)
         Parallax.writeMicroseconds(1490 - value);
     }
     Parallax.writeMicroseconds(1490);
+}
+
+
+void FeedBackServo::Update(int threshold = 4)
+{
+    if (isActive_ == false) return;
+
+    int errorAngle = targetAngle_ - angle_;
+    if (abs(errorAngle) <= threshold)
+    {
+        servo.writeMicroseconds(1490);
+        return;
+    }
+
+    float output = constrain(errorAngle * Kp_, -200.0, 200.0);
+    float offset = (errorAngle > 0) ? 30.0 : -30.0;
+    float value = output + offset;
+
+    servo.writeMicroseconds(1490 - value);
 }
 
 int FeedBackServo::Angle()
