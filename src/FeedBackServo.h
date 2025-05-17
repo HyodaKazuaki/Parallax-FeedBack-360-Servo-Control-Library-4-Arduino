@@ -21,16 +21,21 @@ private:
     Servo Parallax;
     byte feedbackPinNumber;
     byte interruptNumber;
-    static volatile int angle;
-    static float thetaPre;
-    static unsigned int tHigh, tLow;
-    static unsigned long rise, fall;
-    static int turns;
-    static float Kp;
-    static const int unitsFC;
+
+    int targetAngle_;
+    bool isActive_ = true;
+
+    volatile int angle = 0;
+    float thetaPre = 0;
+    unsigned int tHigh = 0, tLow = 0;
+    unsigned long rise = 0, fall = 0;
+    int turns = 0;
+    float Kp = 1.0;
+
+    static const int unitsFC = 360;
     static const float dcMin;
     static const float dcMax;
-    static const int dutyScale;
+    static const int dutyScale = 1;
     static const int q2min;
     static const int q3max;
 
