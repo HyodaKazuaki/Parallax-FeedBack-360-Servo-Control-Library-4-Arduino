@@ -13,7 +13,7 @@ const float FeedBackServo::dcMax = 0.971;
 const int FeedBackServo::q2min = FeedBackServo::unitsFC / 4;
 const int FeedBackServo::q3max = FeedBackServo::q2min * 3;
 
-FeedBackServo* FeedBackServo::instances[6] = { nullptr };
+FeedBackServo* FeedBackServo::instances[MAX_INTERRUPT_NUM] = { nullptr };
 
 FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
 {
@@ -24,7 +24,7 @@ FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
     // convert feedback pin number to interrupt number for use on attachInterrupt function
     interruptNumber = digitalPinToInterrupt(feedbackPinNumber);
 
-    if (interruptNumber < 6) {
+    if (interruptNumber < MAX_INTERRUPT_NUM) {
         instances[interruptNumber] = this;
         switch (interruptNumber)
         {
@@ -96,6 +96,15 @@ void FeedBackServo::CheckPin(byte _feedbackPinNumber)
         _feedbackPinNumber != 2 &&
         _feedbackPinNumber != 3 &&
         _feedbackPinNumber != 7)
+        exit(1);
+#endif
+#ifdef ARDUINO_AVR_MEGA2560
+    if (_feedbackPinNumber != 2 &&
+        _feedbackPinNumber != 3 &&
+        _feedbackPinNumber != 18 &&
+        _feedbackPinNumber != 19 &&
+        _feedbackPinNumber != 20 &&
+        _feedbackPinNumber != 21)
         exit(1);
 #endif
 }

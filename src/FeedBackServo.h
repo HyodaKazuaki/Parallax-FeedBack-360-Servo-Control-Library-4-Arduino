@@ -4,6 +4,24 @@
 #include <Arduino.h>
 #include <Servo.h>
 
+#ifdef ARDUINO_AVR_UNO
+#define MAX_INTERRUPT_NUM 2
+#endif
+
+#ifdef ARDUINO_AVR_LEONARDO
+#define MAX_INTERRUPT_NUM 5
+#endif
+
+#ifdef ARDUINO_AVR_MEGA2560
+#define MAX_INTERRUPT_NUM 6
+#endif
+
+// If not listed above, leave it at 2.
+// This is just a provisional value; some boards may require a larger value.
+#ifndef MAX_INTERRUPT_NUM
+#define MAX_INTERRUPT_NUM 2
+#endif
+
 class FeedBackServo
 {
 public:
@@ -39,7 +57,7 @@ private:
     static const int q2min;
     static const int q3max;
 
-    static FeedBackServo* instances[6];
+    static FeedBackServo* instances[MAX_INTERRUPT_NUM];
     static void isr0();
     static void isr1();
     static void isr2();
