@@ -8,10 +8,10 @@
 #include <Servo.h>
 #include "FeedBackServo.h"
 
-const float FeedBackServo::dcMin = 0.029;
-const float FeedBackServo::dcMax = 0.971;
-const int FeedBackServo::q2min = FeedBackServo::unitsFC / 4;
-const int FeedBackServo::q3max = FeedBackServo::q2min * 3;
+const float FeedBackServo::DC_MIN = 0.029;
+const float FeedBackServo::DC_MAX = 0.971;
+const int FeedBackServo::Q2_MIN = FeedBackServo::UNITS_FC / 4;
+const int FeedBackServo::Q3_MAX = FeedBackServo::Q2_MIN * 3;
 
 FeedBackServo* FeedBackServo::instances[MAX_INTERRUPT_NUM] = { nullptr };
 
@@ -125,23 +125,23 @@ void FeedBackServo::handleFeedback()
         if ((tCycle < 1000) || (tCycle > 1200))
             return;
 
-        float dc = (dutyScale * tHigh) / (float)tCycle;
-        float theta = ((dc - dcMin) * unitsFC) / (dcMax - dcMin);
+        float dc = (DUTY_SCALE * tHigh) / (float)tCycle;
+        float theta = ((dc - DC_MIN) * UNITS_FC) / (DC_MAX - DC_MIN);
 
         if (theta < 0.0)
             theta = 0.0;
-        else if (theta > (unitsFC - 1.0))
-            theta = unitsFC - 1.0;
+        else if (theta > (UNITS_FC - 1.0))
+            theta = UNITS_FC - 1.0;
 
-        if ((theta < q2min) && (thetaPre > q3max))
+        if ((theta < Q2_MIN) && (thetaPre > Q3_MAX))
             turns++;
-        else if ((thetaPre < q2min) && (theta > q3max))
+        else if ((thetaPre < Q2_MIN) && (theta > Q3_MAX))
             turns--;
 
         if (turns >= 0)
-            angle_ = (turns * unitsFC) + theta;
+            angle_ = (turns * UNITS_FC) + theta;
         else if (turns < 0)
-            angle_ = ((turns + 1) * unitsFC) - (unitsFC - theta);
+            angle_ = ((turns + 1) * UNITS_FC) - (UNITS_FC - theta);
 
         thetaPre = theta;
     }

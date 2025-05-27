@@ -53,12 +53,12 @@ private:
     unsigned long rise = 0, fall = 0;
     int turns = 0;
 
-    static const int unitsFC = 360;
-    static const float dcMin;
-    static const float dcMax;
-    static const int dutyScale = 1;
-    static const int q2min;
-    static const int q3max;
+    static const int UNITS_FC = 360; // Full Circle
+    static const float DC_MIN;
+    static const float DC_MAX;
+    static const int DUTY_SCALE = 1;
+    static const int Q2_MIN;
+    static const int Q3_MAX;
 
     static FeedBackServo* instances[MAX_INTERRUPT_NUM];
     static void isr0();
