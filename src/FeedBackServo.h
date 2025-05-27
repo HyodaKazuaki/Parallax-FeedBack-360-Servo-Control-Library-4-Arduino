@@ -39,19 +39,20 @@ public:
 private:
     void checkPin(byte pinNumber);
     void handleFeedback();
-    Servo Parallax;
-    byte feedbackPinNumber;
-    byte interruptNumber;
+
+    Servo Parallax_;
+    byte feedbackPinNumber_;
+    byte interruptNumber_;
 
     float Kp_ = 1.0;
     bool isActive_ = true;
     int targetAngle_;
 
     volatile int angle_ = 0;
-    float thetaPre = 0;
-    unsigned int tHigh = 0, tLow = 0;
-    unsigned long rise = 0, fall = 0;
-    int turns = 0;
+    float thetaPre_ = 0;
+    unsigned int tHigh_ = 0, tLow_ = 0;
+    unsigned long rise_ = 0, fall_ = 0;
+    int turns_ = 0;
 
     static const int UNITS_FC = 360; // Full Circle
     static const float DC_MIN;

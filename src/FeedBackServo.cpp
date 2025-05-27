@@ -15,18 +15,18 @@ const int FeedBackServo::Q3_MAX = FeedBackServo::Q2_MIN * 3;
 
 FeedBackServo* FeedBackServo::instances[MAX_INTERRUPT_NUM] = { nullptr };
 
-FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
+FeedBackServo::FeedBackServo(byte feedbackPinNumber)
 {
     // feedback pin number validation
-    checkPin(_feedbackPinNumber);
-    feedbackPinNumber = _feedbackPinNumber;
+    checkPin(feedbackPinNumber);
+    feedbackPinNumber_ = feedbackPinNumber;
 
     // convert feedback pin number to interrupt number for use on attachInterrupt function
-    interruptNumber = digitalPinToInterrupt(feedbackPinNumber);
+    interruptNumber_ = digitalPinToInterrupt(feedbackPinNumber_);
 
-    if (interruptNumber < MAX_INTERRUPT_NUM) {
-        instances[interruptNumber] = this;
-        switch (interruptNumber)
+    if (interruptNumber_ < MAX_INTERRUPT_NUM) {
+        instances[interruptNumber_] = this;
+        switch (interruptNumber_)
         {
         case 0: attachInterrupt(0, isr0, CHANGE); break;
         case 1: attachInterrupt(1, isr1, CHANGE); break;
@@ -41,7 +41,7 @@ FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
 void FeedBackServo::setServoControl(byte servoPinNumber)
 {
     // Servo control pin attach
-    Parallax.attach(servoPinNumber);
+    Parallax_.attach(servoPinNumber);
 }
 
 void FeedBackServo::setKp(float Kp)
@@ -66,7 +66,7 @@ void FeedBackServo::update(int threshold = 4)
     int errorAngle = targetAngle_ - angle_;
     if (abs(errorAngle) <= threshold)
     {
-        Parallax.writeMicroseconds(1490);
+        Parallax_.writeMicroseconds(1490);
         return;
     }
 
@@ -74,7 +74,7 @@ void FeedBackServo::update(int threshold = 4)
     float offset = (errorAngle > 0) ? 30.0 : -30.0;
     float value = output + offset;
 
-    Parallax.writeMicroseconds(1490 - value);
+    Parallax_.writeMicroseconds(1490 - value);
 }
 
 int FeedBackServo::getAngle()
@@ -87,45 +87,45 @@ int FeedBackServo::Angle()
     return getAngle();
 }
 
-void FeedBackServo::checkPin(byte _feedbackPinNumber)
+void FeedBackServo::checkPin(byte feedbackPinNumber)
 {
 // Check pin number
 #ifdef ARDUINO_AVR_UNO
-    if (_feedbackPinNumber != 2 &&
-        _feedbackPinNumber != 3)
+    if (feedbackPinNumber != 2 &&
+        feedbackPinNumber != 3)
         exit(1);
 #endif
 #ifdef ARDUINO_AVR_LEONARDO
-    if (_feedbackPinNumber != 0 &&
-        _feedbackPinNumber != 1 &&
-        _feedbackPinNumber != 2 &&
-        _feedbackPinNumber != 3 &&
-        _feedbackPinNumber != 7)
+    if (feedbackPinNumber != 0 &&
+        feedbackPinNumber != 1 &&
+        feedbackPinNumber != 2 &&
+        feedbackPinNumber != 3 &&
+        feedbackPinNumber != 7)
         exit(1);
 #endif
 #ifdef ARDUINO_AVR_MEGA2560
-    if (_feedbackPinNumber != 2 &&
-        _feedbackPinNumber != 3 &&
-        _feedbackPinNumber != 18 &&
-        _feedbackPinNumber != 19 &&
-        _feedbackPinNumber != 20 &&
-        _feedbackPinNumber != 21)
+    if (feedbackPinNumber != 2 &&
+        feedbackPinNumber != 3 &&
+        feedbackPinNumber != 18 &&
+        feedbackPinNumber != 19 &&
+        feedbackPinNumber != 20 &&
+        feedbackPinNumber != 21)
         exit(1);
 #endif
 }
 
 void FeedBackServo::handleFeedback()
 {
-    if (digitalRead(feedbackPinNumber))
+    if (digitalRead(feedbackPinNumber_))
     {
-        rise = micros();
-        tLow = rise - fall;
+        rise_ = micros();
+        tLow_ = rise_ - fall_;
 
-        int tCycle = tHigh + tLow;
+        int tCycle = tHigh_ + tLow_;
         if ((tCycle < 1000) || (tCycle > 1200))
             return;
 
-        float dc = (DUTY_SCALE * tHigh) / (float)tCycle;
+        float dc = (DUTY_SCALE * tHigh_) / (float)tCycle;
         float theta = ((dc - DC_MIN) * UNITS_FC) / (DC_MAX - DC_MIN);
 
         if (theta < 0.0)
@@ -133,22 +133,22 @@ void FeedBackServo::handleFeedback()
         else if (theta > (UNITS_FC - 1.0))
             theta = UNITS_FC - 1.0;
 
-        if ((theta < Q2_MIN) && (thetaPre > Q3_MAX))
-            turns++;
-        else if ((thetaPre < Q2_MIN) && (theta > Q3_MAX))
-            turns--;
+        if ((theta < Q2_MIN) && (thetaPre_ > Q3_MAX))
+            turns_++;
+        else if ((thetaPre_ < Q2_MIN) && (theta > Q3_MAX))
+            turns_--;
 
-        if (turns >= 0)
-            angle_ = (turns * UNITS_FC) + theta;
-        else if (turns < 0)
-            angle_ = ((turns + 1) * UNITS_FC) - (UNITS_FC - theta);
+        if (turns_ >= 0)
+            angle_ = (turns_ * UNITS_FC) + theta;
+        else if (turns_ < 0)
+            angle_ = ((turns_ + 1) * UNITS_FC) - (UNITS_FC - theta);
 
-        thetaPre = theta;
+        thetaPre_ = theta;
     }
     else
     {
-        fall = micros();
-        tHigh = fall - rise;
+        fall_ = micros();
+        tHigh_ = fall_ - rise_;
     }
 }
 
