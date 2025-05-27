@@ -33,6 +33,9 @@ public:
     void update(int threshold = 4);
     int getAngle();
 
+    // These functions are left for compatibility.
+    int Angle();
+
 private:
     void checkPin(byte pinNumber);
     void handleFeedback();

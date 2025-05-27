@@ -82,6 +82,11 @@ int FeedBackServo::getAngle()
     return angle_;
 }
 
+int FeedBackServo::Angle()
+{
+    return getAngle();
+}
+
 void FeedBackServo::checkPin(byte _feedbackPinNumber)
 {
 // Check pin number
