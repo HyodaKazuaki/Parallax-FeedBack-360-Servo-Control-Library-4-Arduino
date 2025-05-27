@@ -18,7 +18,7 @@ FeedBackServo* FeedBackServo::instances[MAX_INTERRUPT_NUM] = { nullptr };
 FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
 {
     // feedback pin number validation
-    CheckPin(_feedbackPinNumber);
+    checkPin(_feedbackPinNumber);
     feedbackPinNumber = _feedbackPinNumber;
 
     // convert feedback pin number to interrupt number for use on attachInterrupt function
@@ -38,28 +38,28 @@ FeedBackServo::FeedBackServo(byte _feedbackPinNumber)
     }
 }
 
-void FeedBackServo::SetServoControl(byte servoPinNumber)
+void FeedBackServo::setServoControl(byte servoPinNumber)
 {
     // Servo control pin attach
     Parallax.attach(servoPinNumber);
 }
 
-void FeedBackServo::SetKp(float Kp)
+void FeedBackServo::setKp(float Kp)
 {
     FeedBackServo::Kp_ = Kp;
 }
 
-void FeedBackServo::SetActive(bool isActive)
+void FeedBackServo::setActive(bool isActive)
 {
     isActive_ = isActive;
 }
 
-void FeedBackServo::SetTarget(int target)
+void FeedBackServo::setTarget(int target)
 {
     targetAngle_ = target;
 }
 
-void FeedBackServo::Update(int threshold = 4)
+void FeedBackServo::update(int threshold = 4)
 {
     if (isActive_ == false) return;
 
@@ -77,12 +77,12 @@ void FeedBackServo::Update(int threshold = 4)
     Parallax.writeMicroseconds(1490 - value);
 }
 
-int FeedBackServo::Angle()
+int FeedBackServo::getAngle()
 {
     return angle_;
 }
 
-void FeedBackServo::CheckPin(byte _feedbackPinNumber)
+void FeedBackServo::checkPin(byte _feedbackPinNumber)
 {
 // Check pin number
 #ifdef ARDUINO_AVR_UNO
@@ -109,7 +109,7 @@ void FeedBackServo::CheckPin(byte _feedbackPinNumber)
 #endif
 }
 
-void FeedBackServo::HandleFeedback()
+void FeedBackServo::handleFeedback()
 {
     if (digitalRead(feedbackPinNumber))
     {
@@ -148,9 +148,9 @@ void FeedBackServo::HandleFeedback()
 }
 
 // ISR delegates
-void FeedBackServo::isr0() { if (instances[0]) instances[0]->HandleFeedback(); }
-void FeedBackServo::isr1() { if (instances[1]) instances[1]->HandleFeedback(); }
-void FeedBackServo::isr2() { if (instances[2]) instances[2]->HandleFeedback(); }
-void FeedBackServo::isr3() { if (instances[3]) instances[3]->HandleFeedback(); }
-void FeedBackServo::isr4() { if (instances[4]) instances[4]->HandleFeedback(); }
-void FeedBackServo::isr5() { if (instances[5]) instances[5]->HandleFeedback(); }
+void FeedBackServo::isr0() { if (instances[0]) instances[0]->handleFeedback(); }
+void FeedBackServo::isr1() { if (instances[1]) instances[1]->handleFeedback(); }
+void FeedBackServo::isr2() { if (instances[2]) instances[2]->handleFeedback(); }
+void FeedBackServo::isr3() { if (instances[3]) instances[3]->handleFeedback(); }
+void FeedBackServo::isr4() { if (instances[4]) instances[4]->handleFeedback(); }
+void FeedBackServo::isr5() { if (instances[5]) instances[5]->handleFeedback(); }

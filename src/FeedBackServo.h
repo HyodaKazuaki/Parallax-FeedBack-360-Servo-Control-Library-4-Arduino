@@ -26,16 +26,16 @@ class FeedBackServo
 {
 public:
     FeedBackServo(byte feedbackPinNumber);
-    void SetServoControl(byte servoPinNumber = 3);
-    void SetKp(float Kp = 1.0);
-    void SetActive(bool isActive);
-    void SetTarget(int target);
-    void Update(int threshold = 4);
-    int Angle();
+    void setServoControl(byte servoPinNumber = 3);
+    void setKp(float Kp = 1.0);
+    void setActive(bool isActive);
+    void setTarget(int target);
+    void update(int threshold = 4);
+    int getAngle();
 
 private:
-    void CheckPin(byte pinNumber);
-    void HandleFeedback();
+    void checkPin(byte pinNumber);
+    void handleFeedback();
     Servo Parallax;
     byte feedbackPinNumber;
     byte interruptNumber;
