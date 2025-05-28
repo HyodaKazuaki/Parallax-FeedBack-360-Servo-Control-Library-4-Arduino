@@ -61,6 +61,8 @@ void FeedBackServo::setTarget(int target)
 
 void FeedBackServo::update(int threshold = 4)
 {
+    updateAngleFromPWM();
+
     if (isActive_ == false) return;
 
     int errorAngle = targetAngle_ - angle_;
@@ -120,36 +122,43 @@ void FeedBackServo::handleFeedback()
     {
         rise_ = micros();
         tLow_ = rise_ - fall_;
-
-        int tCycle = tHigh_ + tLow_;
-        if ((tCycle < 1000) || (tCycle > 1200))
-            return;
-
-        float dc = (DUTY_SCALE * tHigh_) / (float)tCycle;
-        float theta = ((dc - DC_MIN) * UNITS_FC) / (DC_MAX - DC_MIN);
-
-        if (theta < 0.0)
-            theta = 0.0;
-        else if (theta > (UNITS_FC - 1.0))
-            theta = UNITS_FC - 1.0;
-
-        if ((theta < Q2_MIN) && (thetaPre_ > Q3_MAX))
-            turns_++;
-        else if ((thetaPre_ < Q2_MIN) && (theta > Q3_MAX))
-            turns_--;
-
-        if (turns_ >= 0)
-            angle_ = (turns_ * UNITS_FC) + theta;
-        else if (turns_ < 0)
-            angle_ = ((turns_ + 1) * UNITS_FC) - (UNITS_FC - theta);
-
-        thetaPre_ = theta;
     }
     else
     {
         fall_ = micros();
         tHigh_ = fall_ - rise_;
+        feedbackUpdated_ = true;
     }
+}
+
+void FeedBackServo::updateAngleFromPWM()
+{
+    if (!feedbackUpdated_) return;
+    feedbackUpdated_ = false;
+
+    int tCycle = tHigh_ + tLow_;
+    if ((tCycle < 1000) || (tCycle > 1200))
+        return;
+
+    float dc = (DUTY_SCALE * tHigh_) / (float)tCycle;
+    float theta = ((dc - DC_MIN) * UNITS_FC) / (DC_MAX - DC_MIN);
+
+    if (theta < 0.0)
+        theta = 0.0;
+    else if (theta > (UNITS_FC - 1.0))
+        theta = UNITS_FC - 1.0;
+
+    if ((theta < Q2_MIN) && (thetaPre_ > Q3_MAX))
+        turns_++;
+    else if ((thetaPre_ < Q2_MIN) && (theta > Q3_MAX))
+        turns_--;
+
+    if (turns_ >= 0)
+        angle_ = (turns_ * UNITS_FC) + theta;
+    else if (turns_ < 0)
+        angle_ = ((turns_ + 1) * UNITS_FC) - (UNITS_FC - theta);
+
+    thetaPre_ = theta;
 }
 
 // ISR delegates

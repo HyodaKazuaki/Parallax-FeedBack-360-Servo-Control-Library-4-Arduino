@@ -39,6 +39,7 @@ public:
 private:
     void checkPin(byte pinNumber);
     void handleFeedback();
+    void updateAngleFromPWM();
 
     Servo Parallax_;
     byte feedbackPinNumber_;
@@ -53,6 +54,8 @@ private:
     unsigned int tHigh_ = 0, tLow_ = 0;
     unsigned long rise_ = 0, fall_ = 0;
     int turns_ = 0;
+
+    volatile bool feedbackUpdated_ = false;
 
     static const int UNITS_FC = 360; // Full Circle
     static const float DC_MIN;
