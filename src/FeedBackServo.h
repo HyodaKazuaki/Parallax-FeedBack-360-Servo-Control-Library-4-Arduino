@@ -34,6 +34,7 @@ public:
     int getAngle();
 
     // These functions are left for compatibility.
+    void rotate(int degree, int threshold = 4);
     int Angle();
 
 private:

@@ -86,6 +86,27 @@ int FeedBackServo::getAngle()
     return angle_;
 }
 
+/*
+ * Legacy blocking rotation function for compatibility.
+ *
+ * This function sets the target angle and actively blocks until the target is reached
+ * within the specified threshold.
+ *
+ * Note:
+ * - Suitable only when controlling a single motor.
+ * - Not recommended in multi-motor systems.
+ * - For non-blocking control, call `setTarget()` and use `update()` in the main loop.
+ */
+void FeedBackServo::rotate(int degree, int threshold)
+{
+    setTarget(degree);
+
+    while (abs(degree - angle_) >= threshold)
+    {
+        update(threshold);
+    }
+}
+
 int FeedBackServo::Angle()
 {
     return getAngle();
