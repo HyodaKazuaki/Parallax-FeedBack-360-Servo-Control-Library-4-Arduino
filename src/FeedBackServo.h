@@ -42,7 +42,7 @@ private:
     void handleFeedback();
     void updateAngleFromPWM();
 
-    Servo Parallax_;
+    Servo parallax_;
     byte feedbackPinNumber_;
     byte interruptNumber_;
 

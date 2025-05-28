@@ -40,7 +40,7 @@ FeedBackServo::FeedBackServo(byte feedbackPinNumber)
 void FeedBackServo::setServoControl(byte servoPinNumber)
 {
     // Servo control pin attach
-    Parallax_.attach(servoPinNumber);
+    parallax_.attach(servoPinNumber);
 }
 
 void FeedBackServo::setKp(float Kp)
@@ -68,7 +68,7 @@ void FeedBackServo::update(int threshold = 4)
     int errorAngle = targetAngle_ - angle_;
     if (abs(errorAngle) <= threshold)
     {
-        Parallax_.writeMicroseconds(1490);
+        parallax_.writeMicroseconds(1490);
         return;
     }
 
@@ -78,7 +78,7 @@ void FeedBackServo::update(int threshold = 4)
     float offset = (errorAngle > 0) ? 30.0 : -30.0;
     float value = output + offset;
 
-    Parallax_.writeMicroseconds(1490 - value);
+    parallax_.writeMicroseconds(1490 - value);
 }
 
 int FeedBackServo::getAngle()
