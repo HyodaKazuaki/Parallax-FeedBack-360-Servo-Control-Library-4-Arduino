@@ -16,6 +16,9 @@ void setup()
 
     servo1.setTarget(300);
     servo2.setTarget(300);
+
+    servo1.setKp(0.5);
+    servo2.setKp(0.5);
 }
 
 void loop() 
