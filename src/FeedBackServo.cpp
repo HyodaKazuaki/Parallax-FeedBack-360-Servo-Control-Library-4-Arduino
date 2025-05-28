@@ -4,10 +4,9 @@
 // Parallax Feedback 360° High Speed Servo is made by Parallax Inc.
 // This library is released under the MIT License.
 
-#include <Arduino.h>
-#include <Servo.h>
 #include "FeedBackServo.h"
 
+// Constants for duty cycle interpretation (based on Parallax spec)
 const float FeedBackServo::DC_MIN = 0.029;
 const float FeedBackServo::DC_MAX = 0.971;
 const int FeedBackServo::Q2_MIN = FeedBackServo::UNITS_FC / 4;
@@ -28,12 +27,12 @@ FeedBackServo::FeedBackServo(byte feedbackPinNumber)
         instances[interruptNumber_] = this;
         switch (interruptNumber_)
         {
-        case 0: attachInterrupt(0, isr0, CHANGE); break;
-        case 1: attachInterrupt(1, isr1, CHANGE); break;
-        case 2: attachInterrupt(2, isr2, CHANGE); break;
-        case 3: attachInterrupt(3, isr3, CHANGE); break;
-        case 4: attachInterrupt(4, isr4, CHANGE); break;
-        case 5: attachInterrupt(5, isr5, CHANGE); break;
+            case 0: attachInterrupt(0, isr0, CHANGE); break;
+            case 1: attachInterrupt(1, isr1, CHANGE); break;
+            case 2: attachInterrupt(2, isr2, CHANGE); break;
+            case 3: attachInterrupt(3, isr3, CHANGE); break;
+            case 4: attachInterrupt(4, isr4, CHANGE); break;
+            case 5: attachInterrupt(5, isr5, CHANGE); break;
         }
     }
 }
@@ -61,6 +60,7 @@ void FeedBackServo::setTarget(int target)
 
 void FeedBackServo::update(int threshold = 4)
 {
+    // Update angle based on the latest PWM feedback
     updateAngleFromPWM();
 
     if (isActive_ == false) return;
@@ -72,6 +72,8 @@ void FeedBackServo::update(int threshold = 4)
         return;
     }
 
+    // NOTE: Using simple P-control.
+    // TODO: PID control may improve stability and response.
     float output = constrain(errorAngle * Kp_, -200.0, 200.0);
     float offset = (errorAngle > 0) ? 30.0 : -30.0;
     float value = output + offset;
@@ -118,6 +120,8 @@ void FeedBackServo::checkPin(byte feedbackPinNumber)
 
 void FeedBackServo::handleFeedback()
 {
+    // Interrupt Service Routine: triggered on pin CHANGE
+    // Records timing only — actual decoding happens in main loop
     if (digitalRead(feedbackPinNumber_))
     {
         rise_ = micros();
