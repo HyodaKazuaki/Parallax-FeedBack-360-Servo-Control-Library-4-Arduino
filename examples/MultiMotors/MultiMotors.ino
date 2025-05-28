@@ -11,19 +11,19 @@ void setup()
 {
     Serial.begin(115200);
 
-    servo1.SetServoControl(9);
-    servo2.SetServoControl(10);
+    servo1.setServoControl(9);
+    servo2.setServoControl(10);
 
-    servo1.SetTarget(500);
-    servo2.SetTarget(5000);
+    servo1.setTarget(300);
+    servo2.setTarget(300);
 }
 
 void loop() 
 {  
-    servo1.Update();
-    servo2.Update();
+    servo1.update();
+    servo2.update();
 
-    Serial.print(servo1.Angle());
+    Serial.print(servo1.getAngle());
     Serial.print(" / ");
-    Serial.println(servo2.Angle());
+    Serial.println(servo2.getAngle());
 }
