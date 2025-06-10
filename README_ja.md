@@ -7,7 +7,7 @@ English README is [`README.md`](https://github.com/HyodaKazuaki/Parallax-FeedBac
 ## お知らせ
 
 このライブラリは、メジャーバージョン 2.0.0 以降、非同期制御と複数のサーボモーター制御のため破壊的変更を導入しました。
-詳細は関数定義や例をご確認ください。
+詳細は関数定義やサンプルをご確認ください。
 
 ## サポート
 
