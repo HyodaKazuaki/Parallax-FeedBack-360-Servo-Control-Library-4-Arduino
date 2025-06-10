@@ -6,16 +6,20 @@
 // set feedback signal pin number
 FeedBackServo servo = FeedBackServo(FEEDBACK_PIN);
 
-void setup() {
+void setup()
+{
     // set servo control pin number
     servo.setServoControl(SERVO_PIN);
     servo.setKp(1.0);
 }
 
-void loop() {
-    // rotate servo to 270 and -180 degrees(with contains +-4 degrees error) each 1 second.
-    servo.rotate(270, 4);
+void loop()
+{
+    // rotate servo to 270 and -180 degrees(with contains +-4 degrees error) each 1 second with non-blocking.
+    servo.setTarget(270);
+    servo.update(4);
     delay(1000);
-    servo.rotate(-180, 4);
+    servo.setTarget(-180);
+    servo.update(4);
     delay(1000);
 }
