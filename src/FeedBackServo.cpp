@@ -58,7 +58,7 @@ void FeedBackServo::setTarget(int target)
     targetAngle_ = target;
 }
 
-void FeedBackServo::update(int threshold = 4)
+void FeedBackServo::update(int threshold)
 {
     // Update angle based on the latest PWM feedback
     updateAngleFromPWM();
@@ -136,6 +136,18 @@ void FeedBackServo::checkPin(byte feedbackPinNumber)
         feedbackPinNumber != 19 &&
         feedbackPinNumber != 20 &&
         feedbackPinNumber != 21)
+        exit(1);
+#endif
+#ifdef ARDUINO_SAMD_NANO_33_IOT
+    if (feedbackPinNumber != 2 &&
+        feedbackPinNumber != 3 &&
+        feedbackPinNumber != 9 &&
+        feedbackPinNumber != 10 &&
+        feedbackPinNumber != 11 &&
+        feedbackPinNumber != 13 &&
+        feedbackPinNumber != 15 && // A1
+        feedbackPinNumber != 19 && // A5
+        feedbackPinNumber != 21)   // A7
         exit(1);
 #endif
 }
