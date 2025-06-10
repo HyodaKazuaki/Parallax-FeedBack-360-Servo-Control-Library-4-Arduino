@@ -97,6 +97,7 @@ int FeedBackServo::getAngle()
  * - Not recommended in multi-motor systems.
  * - For non-blocking control, call `setTarget()` and use `update()` in the main loop.
  */
+[[deprecated("Use non-blocking control functions, setTarget(int) and update().")]]
 void FeedBackServo::rotate(int degree, int threshold)
 {
     setTarget(degree);
