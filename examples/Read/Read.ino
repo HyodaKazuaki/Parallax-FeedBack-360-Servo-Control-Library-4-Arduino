@@ -5,12 +5,14 @@
 // set feedback signal pin number
 FeedBackServo servo = FeedBackServo(FEEDBACK_PIN);
 
-void setup() {
+void setup()
+{
     // serial communication start with 115200 bps
     Serial.begin(115200);
 }
 
-void loop() {
+void loop()
+{
     Serial.print("Now angle: ");
-    Serial.println(servo.Angle());
+    Serial.println(servo.getAngle());
 }
