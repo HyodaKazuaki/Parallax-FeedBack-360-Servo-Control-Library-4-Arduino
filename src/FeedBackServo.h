@@ -16,6 +16,10 @@
 #define MAX_INTERRUPT_NUM 6
 #endif
 
+#ifdef ARDUINO_SAMD_NANO_33_IOT
+#define MAX_INTERRUPT_NUM 9
+#endif
+
 // If not listed above, leave it at 2.
 // This is just a provisional value; some boards may require a larger value.
 #ifndef MAX_INTERRUPT_NUM
@@ -26,7 +30,7 @@ class FeedBackServo
 {
 public:
     FeedBackServo(byte feedbackPinNumber);
-    void setServoControl(byte servoPinNumber = 3);
+    void setServoControl(byte servoPinNumber);
     void setKp(float Kp = 1.0);
     void setActive(bool isActive);
     void setTarget(int target);

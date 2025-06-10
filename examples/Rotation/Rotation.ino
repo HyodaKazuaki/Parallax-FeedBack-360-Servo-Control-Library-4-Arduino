@@ -1,4 +1,5 @@
 #include "FeedBackServo.h"
+
 // define feedback signal pin and servo control pin
 #define FEEDBACK_PIN 2
 #define SERVO_PIN 3
@@ -6,20 +7,40 @@
 // set feedback signal pin number
 FeedBackServo servo = FeedBackServo(FEEDBACK_PIN);
 
+int target = 0; // State selection
+const long interval = 2000; // 2 seconds (in milliseconds)
+unsigned long previousTime = 0;
+
 void setup()
 {
     // set servo control pin number
     servo.setServoControl(SERVO_PIN);
+
+    // adjust Kp as needed
     servo.setKp(1.0);
 }
 
 void loop()
 {
-    // rotate servo to 270 and -180 degrees(with contains +-4 degrees error) each 1 second with non-blocking.
-    servo.setTarget(270);
-    servo.update(4);
-    delay(1000);
-    servo.setTarget(-180);
-    servo.update(4);
-    delay(1000);
+    // Rotate servo from 0 to 180 (w/ +-2 threshold) using non-blocking.
+    servo.update(2);
+
+    // Calculate whether new target input request meets specified time interval requirement to prevent mistarget
+    unsigned long currentTime = millis();
+    if(currentTime - previousTime >= interval){
+        previousTime = currentTime;
+
+        // Prevents improper targetting by providing proper time for relevant calculations to take place
+        switch (target){
+            case 0:
+                target = 1;
+                servo.setTarget(0);
+                break;
+            case 1:
+                target = 0;
+                servo.setTarget(270);
+                break;
+        }
+    }
+
 }
