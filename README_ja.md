@@ -121,3 +121,8 @@ void loop()
 
 このライブラリは MIT ライセンスに基づいて配布させています。
 詳しくは[`LICENSE`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/LICENSE)をご覧ください。
+
+## 貢献者
+
+このライブラリは多くの個人の貴重な貢献によって支えられています。
+詳細な貢献者リストは[`CONTRIBUTORS.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/CONTRIBUTORS.md)をご覧ください。

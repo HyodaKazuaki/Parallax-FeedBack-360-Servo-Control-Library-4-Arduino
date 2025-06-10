@@ -124,3 +124,8 @@ void loop()
 
 This library is released under the MIT License.
 Please see [`LICENSE`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/LICENSE) file for detail.
+
+## Contributors
+
+This library is made possible by the valuable contributions of many individuals.
+Please see [`CONTRIBUTORS.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/CONTRIBUTORS.md) file for a detailed list.
