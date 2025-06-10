@@ -1,4 +1,5 @@
 # Supported List
+
 If you have successfully used this library with an unconfirmed board, please let us know with a Pull Request.
 
 ◯ ... Supported
@@ -11,7 +12,7 @@ If you have successfully used this library with an unconfirmed board, please let
 | Arduino/Genuino Uno | ◯ |
 | Arduino Duemilanove or Diecimila | △ |
 | Arduino Nano | △ |
-| Arduino/Genuino Mega or Mega 2560 | △ |
+| Arduino/Genuino Mega or Mega 2560 | ◯ |
 | Arduino Mega ADK | △ |
 | Arduino Leonardo | △ |
 | Arduino Leonardo ETH | △ |
