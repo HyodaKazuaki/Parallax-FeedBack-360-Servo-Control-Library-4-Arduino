@@ -1,22 +1,22 @@
 #include "FeedBackServo.h"
 
-// define feedback signal pin and servo control pin
+// Sefine feedback signal pin and servo control pin
 #define FEEDBACK_PIN 2
 #define SERVO_PIN 3
 
-// set feedback signal pin number
+// Set feedback signal pin number
 FeedBackServo servo = FeedBackServo(FEEDBACK_PIN);
 
-int target = 0; // State selection
+int target = 0;             // State selection
 const long interval = 2000; // 2 seconds (in milliseconds)
 unsigned long previousTime = 0;
 
 void setup()
 {
-    // set servo control pin number
+    // Set servo control pin number
     servo.setServoControl(SERVO_PIN);
 
-    // adjust Kp as needed
+    // Adjust Kp as needed
     servo.setKp(1.0);
 }
 
@@ -27,20 +27,21 @@ void loop()
 
     // Calculate whether new target input request meets specified time interval requirement to prevent mistarget
     unsigned long currentTime = millis();
-    if(currentTime - previousTime >= interval){
+    if (currentTime - previousTime >= interval)
+    {
         previousTime = currentTime;
 
         // Prevents improper targetting by providing proper time for relevant calculations to take place
-        switch (target){
-            case 0:
-                target = 1;
-                servo.setTarget(0);
-                break;
-            case 1:
-                target = 0;
-                servo.setTarget(270);
-                break;
+        switch (target)
+        {
+        case 0:
+            target = 1;
+            servo.setTarget(0);
+            break;
+        case 1:
+            target = 0;
+            servo.setTarget(180);
+            break;
         }
     }
-
 }

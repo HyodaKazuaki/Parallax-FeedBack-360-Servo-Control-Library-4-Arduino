@@ -1,12 +1,12 @@
 #include "FeedBackServo.h"
-// define feedback signal pin
+// Define feedback signal pin
 #define FEEDBACK_PIN1 2
 #define FEEDBACK_PIN2 3
-// define servo control pin number
+// Define servo control pin number
 #define SERVO_PIN1 9
 #define SERVO_PIN2 10
 
-// set feedback signal pin number
+// Set feedback signal pin number
 FeedBackServo servo1 = FeedBackServo(FEEDBACK_PIN1);
 FeedBackServo servo2 = FeedBackServo(FEEDBACK_PIN2);
 

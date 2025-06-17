@@ -30,6 +30,7 @@ English README is [`README.md`](https://github.com/HyodaKazuaki/Parallax-FeedBac
 
 ```cpp
 #include "FeedBackServo.h"
+
 // フィードバック信号ピンとサーボモータ制御ピンを定義
 #define FEEDBACK_PIN 2
 #define SERVO_PIN 3
@@ -37,34 +38,56 @@ English README is [`README.md`](https://github.com/HyodaKazuaki/Parallax-FeedBac
 // フィードバック信号ピンをセット
 FeedBackServo servo = FeedBackServo(FEEDBACK_PIN);
 
-void setup() {
+int target = 0;             // ターゲット状態変数
+const long interval = 2000; // 2秒(2000ミリ秒)
+unsigned long previousTime = 0;
+
+void setup()
+{
     // サーボモータ制御ピンをセット
     servo.setServoControl(SERVO_PIN);
+
     // P制御用のKp値をセット
     servo.setKp(1.0);
 }
 
-void loop() {
-    // サーボモータを1秒ごとに270度、-180度回転(+-4度の誤差を含む)
-    servo.setTarget(270);
-    servo.update(4);
-    delay(1000);
-    servo.setTarget(-180);
-    servo.update(4);
-    delay(1000);
-}
+void loop()
+{
+    // サーボモータをノンブロッキングに2秒ごとに0度、180度に回転(+-2度の誤差を含む)
+    servo.update(2);
 
+    // 前回時間から2秒経過するまでスキップし処理時間を確保
+    unsigned long currentTime = millis();
+    if (currentTime - previousTime >= interval)
+    {
+        previousTime = currentTime;
+
+        // ターゲット状態変数に応じて確度を変更
+        switch (target)
+        {
+        case 0:
+            target = 1;
+            servo.setTarget(0);
+            break;
+        case 1:
+            target = 0;
+            servo.setTarget(180);
+            break;
+        }
+    }
+}
 ```
 
 ### Read
 
 ```cpp
 #include "FeedBackServo.h"
+
 // フィードバック信号ピンを定義
 #define FEEDBACK_PIN 2
 
 // フィードバック信号ピンをセット
-FeedBackServo Servo = FeedBackServo(FEEDBACK_PIN);
+FeedBackServo feedbackServo(FEEDBACK_PIN);
 
 void setup() {
     // シリアル通信を115200bpsで開始
@@ -72,8 +95,13 @@ void setup() {
 }
 
 void loop() {
-    Serial.print("Now angle: ");
-    Serial.println(servo.getAngle());
+    // サーボの角度を計測するためupdateメンバー関数の呼び出しが必要
+    feedbackServo.update();
+
+    // サーボの角度を取得
+    int currentAngle = feedbackServo.getAngle();
+
+    Serial.println(currentAngle);
 }
 ```
 
