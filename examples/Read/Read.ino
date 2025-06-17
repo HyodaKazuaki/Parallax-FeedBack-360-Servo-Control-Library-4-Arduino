@@ -1,18 +1,23 @@
 #include "FeedBackServo.h"
-// define feedback signal pin
-#define FEEDBACK_PIN 2
 
-// set feedback signal pin number
-FeedBackServo servo = FeedBackServo(FEEDBACK_PIN);
+// Use a valid interrupt pin
+#define FEEDBACK_PIN 2 
 
-void setup()
-{
-    // serial communication start with 115200 bps
-    Serial.begin(115200);
+// Create the servo object
+FeedBackServo feedbackServo(FEEDBACK_PIN);
+
+void setup() {
+  Serial.begin(115200);
 }
 
-void loop()
-{
-    Serial.print("Now angle: ");
-    Serial.println(servo.getAngle());
+void loop() {
+    
+    // Necessary to ensure the measured angle of the servo is updated each iteration
+    feedbackServo.update(); 
+
+    // Retrieve angle from servo
+    int currentAngle = feedbackServo.getAngle(); 
+
+    // Output angle
+    Serial.println(currentAngle); 
 }
