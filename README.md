@@ -17,7 +17,7 @@ Please see [`SUPPORTED.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-36
 
 Download this library on the [release page](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/releases) and install zip file on Arduino IDE.
 
-## Common Issues
+## Troubleshooting
 #### Pin Assignment Errors
 - Ensure the feedback signal wire of the servo motor is connected to a digital PWM pin usable for interrupts. If you are unsure which pins on your board support interrupts, you can check [here](https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/). The chosen pin number on the board must be properly reflected in the assignment.
 - Ensure the control signal wire of the servo motor is connected to a digital PWM pin, and that the pin has been properly assigned in the code to reflect the real-world connections.
