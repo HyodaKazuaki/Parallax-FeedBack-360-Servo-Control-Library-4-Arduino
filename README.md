@@ -1,30 +1,30 @@
 # Parallax FeedBack 360 Servo Control Library 4 Arduino
 
-This library facilitates control of [Parallax FeedBack 360° High Speed Servo](https://www.parallax.com/product/900-00360). This servo motor provides feedback via the PWM signal. You can control servo to degree of rotation what you want with this library. Of course, you can read servo's degree of rotation.
+This library facilitates control of [Parallax FeedBack 360° High Speed Servo](https://www.parallax.com/product/900-00360), using the servo encoder feedback for precise control of both angle and speed. It's designed to make running multiple servos at once simple and effective.
 
 日本語の README は[`README_ja.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/README_ja.md)をご覧ください。
 
 ## NOTICE
 
-This library introduced breaking changes for non-blocking control and support for multiple servo motors since major version 2.0.0.
+This library introduced breaking changes for non-blocking control and support for multiple servo motors with the major version 2.0.0 release.
 For details, see function definitions and examples.
 
-## Support
+## Supported Arduino Boards
 
 Please see [`SUPPORTED.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/blob/master/SUPPORTED.md).
 
-## Pin Assign
-
-Assign the feedback signal line of the servomotor to the feedback signal pin that allows external interruption.
-Assign the control pin to which the servo motor control line is assigned.
-
 ## How to Install
 
-Download this library on [Release page](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/releases) and Install zip file on Arduino IDE.
+Download this library on the [release page](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/releases) and Install zip file on Arduino IDE.
+
+## Common Issues
+#### Pin Assignment Errors
+- Ensure the feedback signal wire of the servo motor is connected to a digital PWM pin usable for interrupts. If you are unsure which pins on your board support interrupts, you can check [here](https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/). The chosen pin number on the board must be properly reflected in the assignment.
+- Ensure the control signal wire of the servo motor is connected to a digital PWM pin, and that the pin has been properly assigned in the code to reflect the real-world connections.
 
 ## Example
 
-This library is contains some examples.
+The following are general examples for the [Parallax FeedBack 360 Servo Control Library](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/).
 
 ### Rotation
 
@@ -107,7 +107,7 @@ void loop()
 }
 ```
 
-### Multi motor controls
+### Multi-motor controls
 
 ```cpp
 #include "FeedBackServo.h"
