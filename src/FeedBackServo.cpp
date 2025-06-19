@@ -1,19 +1,15 @@
 // FeedBack360 Servo Control Library 4 Arduino
-// Controll.cpp
+// FeedBackServo.cpp
 // Copyright © Hyoda Kazuaki
 // Parallax Feedback 360° High Speed Servo is made by Parallax Inc.
 // This library is released under the MIT License.
 
 #include "FeedBackServo.h"
 
-// Constants for duty cycle interpretation (based on Parallax spec)
-const float FeedBackServo::DC_MIN = 0.029;
-const float FeedBackServo::DC_MAX = 0.971;
-const int FeedBackServo::Q2_MIN = FeedBackServo::UNITS_FC / 4;
-const int FeedBackServo::Q3_MAX = FeedBackServo::Q2_MIN * 3;
-
 FeedBackServo* FeedBackServo::instances[MAX_INTERRUPT_NUM] = { nullptr };
 
+// Constructs a new Parallax feedback servo object using a defined feedback pin number.
+// The chosen pin MUST support interrupts. Check the attachInterrupt() documentation for a list of valid interrupt pins on respective Arduino products. 
 FeedBackServo::FeedBackServo(byte feedbackPinNumber)
 {
     // feedback pin number validation
@@ -35,35 +31,68 @@ FeedBackServo::FeedBackServo(byte feedbackPinNumber)
             case 5: attachInterrupt(5, isr5, CHANGE); break;
         }
     }
+
+    // Defaults the mode to position upon initialization
+    setMode(Constants::Mode::POSITION_CONTROL);
 }
 
+// Assigns the servo a signal pin.
 void FeedBackServo::setServoControl(byte servoPinNumber)
 {
-    // Servo control pin attach
+    // Servo control pin attach.
     parallax_.attach(servoPinNumber);
 }
 
+// Sets the proportional constant for a closed PID loop.
 void FeedBackServo::setKp(float Kp)
 {
     FeedBackServo::Kp_ = Kp;
 }
 
-void FeedBackServo::setActive(bool isActive)
+// Can be used to enable or disable a Parallax servo motor, toggling responsiveness to the .update() function
+void FeedBackServo::setMode(Constants::Mode mode)
 {
-    isActive_ = isActive;
+    mode_ = mode;
 }
 
+// Returns current mode of the motor
+Constants::Mode FeedBackServo::getMode(){
+    return mode_;
+}
+
+// Sets target of servo in degrees. 
+// For the target to be followed, .update() must be called every loop. If rapidly switching between targets, a "Blink Without Delay" system is recommended (example given in 'Rotation.ino').
 void FeedBackServo::setTarget(int target)
 {
     targetAngle_ = target;
 }
 
+// Returns current calculated error
+int FeedBackServo::getError(){
+    return targetAngle_ - angle_;
+}
+
+// The calling servo motor will mirror the motion actuated by the given servo object.
+// NOTE: Requires position control to be enabled by the calling motor.
+// TODO: Requires rework to reduces latency.
+void FeedBackServo::follow(FeedBackServo servo){
+    setTarget(servo.getAngle());
+}
+
+// Servo locks to the angle last recorded before calling this function.
+void FeedBackServo::lock(){
+    setTarget(getAngle());
+}
+
+
+// Updates the error calculated by the encoder; necessary for position control.
+// NOTE: Using delay() will also cease update calculations for the Parallax servo motors, potentially causing undesired behavior.
 void FeedBackServo::update(int threshold)
 {
     // Update angle based on the latest PWM feedback
     updateAngleFromPWM();
 
-    if (isActive_ == false) return;
+    if (checkMode(Constants::Mode::POSITION_CONTROL)) return;
 
     int errorAngle = targetAngle_ - angle_;
     if (abs(errorAngle) <= threshold)
@@ -81,6 +110,7 @@ void FeedBackServo::update(int threshold)
     parallax_.writeMicroseconds(1490 - value);
 }
 
+// Returns current angle of the Feedback Servo
 int FeedBackServo::getAngle()
 {
     return angle_;
@@ -108,11 +138,78 @@ void FeedBackServo::rotate(int degree, int threshold)
     }
 }
 
+[[deprecated("Use getAngle() for future support.")]]
 int FeedBackServo::Angle()
 {
     return getAngle();
 }
 
+
+// Sets the current direction of rotation.
+// Constants::Direction::FORWARD will rotate in the counterclockwise direction.
+// Constants::Direction::BACKWARD wil rotate in the clockwise direction.
+void FeedBackServo::setDirection(Constants::Direction direction)
+{
+    switch(direction)
+    {
+        case Constants::Direction::FORWARD:
+            direction_ = false; // Counter-clockwise
+            break;
+        case Constants::Direction::BACKWARD:
+            direction_ = true; // Clockwise
+            break;
+    }
+}
+
+// Determines whether current mode facilitates desired form of motion.
+bool FeedBackServo::checkMode(Constants::Mode mode){    
+    return mode_ != mode;
+
+}
+
+// Rotate servo according to a given percent representing power output.
+// Direction can be toggled through setDirection().
+// Note: Recommended for speed control. Does NOT utilize position control.
+void FeedBackServo::move(float percent){
+
+    if(checkMode(Constants::Mode::VELOCITY_CONTROL)) return;
+
+    float speed;
+    if (percent == 0.0f){
+        speed = 0.0f;
+    } else {
+        speed = direction_ ? Constants::LOWER_NEUTRAL_BOUND - Constants::POWER_CONVERSION * percent : 
+                             Constants::UPPER_NEUTRAL_BOUND + Constants::POWER_CONVERSION * percent;
+    }
+    parallax_.writeMicroseconds(speed);
+}
+
+// Rotate servo according to a desired rotations per minute.
+// Direction can be toggled through setDirection().
+// Note: Recommended for speed control. Does NOT utilize position control.
+void FeedBackServo::move(unsigned int rpm){
+
+    if(checkMode(Constants::Mode::VELOCITY_CONTROL)) return;
+
+    float speed;
+    switch (rpm){
+        case 0:
+            speed = 0;
+            break;
+        default:
+            speed = direction_ ? Constants::LOWER_NEUTRAL_BOUND - Constants::RPM_CONVERSION * rpm : 
+                                 Constants::UPPER_NEUTRAL_BOUND + Constants::RPM_CONVERSION * rpm;
+            break;
+    }
+    parallax_.writeMicroseconds(speed);
+}
+
+// Controls raw speed of the servo. Not recommended unless familiarized with specification sheet. 
+void FeedBackServo::writeMicroseconds(int value){
+    parallax_.writeMicroseconds(value);
+}
+
+// Checks whether given pin number is a valid interrupt pin.
 void FeedBackServo::checkPin(byte feedbackPinNumber)
 {
 // Check pin number
@@ -152,6 +249,7 @@ void FeedBackServo::checkPin(byte feedbackPinNumber)
 #endif
 }
 
+// Calculate duty cycle
 void FeedBackServo::handleFeedback()
 {
     // Interrupt Service Routine: triggered on pin CHANGE
@@ -169,6 +267,7 @@ void FeedBackServo::handleFeedback()
     }
 }
 
+// Calculates the current angle of the Parallax servo motor using the duty cycle based on the Parallax servo motor specifications sheet.
 void FeedBackServo::updateAngleFromPWM()
 {
     if (!feedbackUpdated_) return;
@@ -178,23 +277,23 @@ void FeedBackServo::updateAngleFromPWM()
     if ((tCycle < 1000) || (tCycle > 1200))
         return;
 
-    float dc = (DUTY_SCALE * tHigh_) / (float)tCycle;
-    float theta = ((dc - DC_MIN) * UNITS_FC) / (DC_MAX - DC_MIN);
+    float dc = (Constants::DUTY_SCALE * tHigh_) / (float)tCycle;
+    float theta = ((dc - Constants::DC_MIN) * Constants::UNITS_FC) / (Constants::DC_MAX - Constants::DC_MIN);
 
     if (theta < 0.0)
         theta = 0.0;
-    else if (theta > (UNITS_FC - 1.0))
-        theta = UNITS_FC - 1.0;
+    else if (theta > (Constants::UNITS_FC - 1.0))
+        theta = Constants::UNITS_FC - 1.0;
 
-    if ((theta < Q2_MIN) && (thetaPre_ > Q3_MAX))
+    if ((theta < Constants::Q2_MIN) && (thetaPre_ > Constants::Q3_MAX))
         turns_++;
-    else if ((thetaPre_ < Q2_MIN) && (theta > Q3_MAX))
+    else if ((thetaPre_ < Constants::Q2_MIN) && (theta > Constants::Q3_MAX))
         turns_--;
 
     if (turns_ >= 0)
-        angle_ = (turns_ * UNITS_FC) + theta;
+        angle_ = (turns_ * Constants::UNITS_FC) + theta;
     else if (turns_ < 0)
-        angle_ = ((turns_ + 1) * UNITS_FC) - (UNITS_FC - theta);
+        angle_ = ((turns_ + 1) * Constants::UNITS_FC) - (Constants::UNITS_FC - theta);
 
     thetaPre_ = theta;
 }
