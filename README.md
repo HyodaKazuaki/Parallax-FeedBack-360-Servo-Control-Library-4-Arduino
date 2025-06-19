@@ -15,12 +15,20 @@ Please see [`SUPPORTED.md`](https://github.com/HyodaKazuaki/Parallax-FeedBack-36
 
 ## How to Install
 
-Download this library on the [release page](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/releases) and Install zip file on Arduino IDE.
+Download this library on the [release page](https://github.com/HyodaKazuaki/Parallax-FeedBack-360-Servo-Control-Library-4-Arduino/releases) and install zip file on Arduino IDE.
 
 ## Common Issues
 #### Pin Assignment Errors
 - Ensure the feedback signal wire of the servo motor is connected to a digital PWM pin usable for interrupts. If you are unsure which pins on your board support interrupts, you can check [here](https://docs.arduino.cc/language-reference/en/functions/external-interrupts/attachInterrupt/). The chosen pin number on the board must be properly reflected in the assignment.
 - Ensure the control signal wire of the servo motor is connected to a digital PWM pin, and that the pin has been properly assigned in the code to reflect the real-world connections.
+
+#### "The angle isn't updating / servo spins endlessly"
+- The .update(int threshold) function must be called every loop for position control to properly work, as the servo motor's angle will otherwise not update.
+- The proper control mode must be set for the servo motor to properly respond.
+
+#### "Only one servo works"
+- Certify that you have updated the library to the most recent version for non-blocking control.
+  - If so, make sure nothing else in the code may be blocking functionality. The delay(int millis) function commonly used in standard servo examples may be disrupting functionality. For a working example, see the "Multi-motor controls" case below.
 
 ## Example
 
