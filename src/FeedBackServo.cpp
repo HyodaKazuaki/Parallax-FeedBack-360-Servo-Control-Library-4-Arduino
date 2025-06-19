@@ -32,8 +32,8 @@ FeedBackServo::FeedBackServo(byte feedbackPinNumber)
         }
     }
 
-    // Defaults the mode to coast upon initialization
-    setMode(Constants::Mode::COAST_CONTROL);
+    // Defaults the mode to position upon initialization
+    setMode(Constants::Mode::POSITION_CONTROL);
 }
 
 // Assigns the servo a signal pin.
