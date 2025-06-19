@@ -1,6 +1,6 @@
 #include "FeedBackServo.h"
 
-// Sefine feedback signal pin and servo control pin
+// Define feedback signal pin and servo control pin
 #define FEEDBACK_PIN 2
 #define SERVO_PIN 3
 
@@ -25,13 +25,13 @@ void loop()
     // Rotate servo from 0 to 180 (w/ +-2 threshold) using non-blocking.
     servo.update(2);
 
-    // Calculate whether new target input request meets specified time interval requirement to prevent mistarget
+    // Calculate whether new target input request meets specified time interval requirement to prevent mistarget.
     unsigned long currentTime = millis();
     if (currentTime - previousTime >= interval)
     {
         previousTime = currentTime;
 
-        // Prevents improper targetting by providing proper time for relevant calculations to take place
+        // Prevents improper targetting by providing proper time for relevant calculations to take place.
         switch (target)
         {
         case 0:
