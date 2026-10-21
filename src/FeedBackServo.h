@@ -20,11 +20,20 @@
 #define MAX_INTERRUPT_NUM 9
 #endif
 
+#ifdef ARDUINO_ARCH_NRF52840
+#define MAX_INTERRUPT_NUM 22
+#endif
+
 // If not listed above, leave it at 2.
 // This is just a provisional value; some boards may require a larger value.
 #ifndef MAX_INTERRUPT_NUM
 #define MAX_INTERRUPT_NUM 2
+#warning Unknown board, defining MAX_INTERRUPT_NUM to 2
 #endif
+
+#define FEEDBACKSERVO_REPEAT_ISR(M) \
+    M(0) M(1) M(2) M(3) M(4) M(5) M(6) M(7) M(8) M(9) M(10) M(11) M(12) M(13) \
+    M(14) M(15) M(16) M(17) M(18) M(19) M(20) M(21)
 
 class FeedBackServo
 {
@@ -70,12 +79,10 @@ private:
     static const int Q3_MAX;
 
     static FeedBackServo* instances[MAX_INTERRUPT_NUM];
-    static void isr0();
-    static void isr1();
-    static void isr2();
-    static void isr3();
-    static void isr4();
-    static void isr5();
+
+#define ISR_PROTOTYPE(n) static void isr ## n ();
+    FEEDBACKSERVO_REPEAT_ISR(ISR_PROTOTYPE)
+#undef ISR_PROTOTYPE
 };
 
 #endif

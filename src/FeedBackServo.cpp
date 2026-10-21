@@ -27,13 +27,13 @@ FeedBackServo::FeedBackServo(byte feedbackPinNumber)
         instances[interruptNumber_] = this;
         switch (interruptNumber_)
         {
-            case 0: attachInterrupt(0, isr0, CHANGE); break;
-            case 1: attachInterrupt(1, isr1, CHANGE); break;
-            case 2: attachInterrupt(2, isr2, CHANGE); break;
-            case 3: attachInterrupt(3, isr3, CHANGE); break;
-            case 4: attachInterrupt(4, isr4, CHANGE); break;
-            case 5: attachInterrupt(5, isr5, CHANGE); break;
+#define SWITCH_CASE(n) \
+            case n: attachInterrupt(n, isr ## n, CHANGE); break;
+            FEEDBACKSERVO_REPEAT_ISR(SWITCH_CASE)
+            default: exit(1);  // Only possible if MAX_INTERUPT_NUM > number of ISRs
         }
+    } else {
+        exit(1);
     }
 }
 
@@ -200,9 +200,8 @@ void FeedBackServo::updateAngleFromPWM()
 }
 
 // ISR delegates
-void FeedBackServo::isr0() { if (instances[0]) instances[0]->handleFeedback(); }
-void FeedBackServo::isr1() { if (instances[1]) instances[1]->handleFeedback(); }
-void FeedBackServo::isr2() { if (instances[2]) instances[2]->handleFeedback(); }
-void FeedBackServo::isr3() { if (instances[3]) instances[3]->handleFeedback(); }
-void FeedBackServo::isr4() { if (instances[4]) instances[4]->handleFeedback(); }
-void FeedBackServo::isr5() { if (instances[5]) instances[5]->handleFeedback(); }
+#define ISR_IMPLEMENTATION(n) \
+void FeedBackServo::isr ## n () { \
+    if (instances[n]) instances[n]->handleFeedback(); \
+}
+FEEDBACKSERVO_REPEAT_ISR(ISR_IMPLEMENTATION)
